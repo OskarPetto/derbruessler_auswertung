@@ -1,0 +1,7 @@
+numpy
+pyproj
+tqdm
+pgeocode
+rioxarray
+geopandas
+xarray
