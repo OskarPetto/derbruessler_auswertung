@@ -23,8 +23,8 @@ def bewerte_befall(befallstaerke):
     return befallstaerke_values[befallstaerke]
 
 
-in_file_name = 'daten/Datengrundlage_Auswertung_V2.csv'
-out_file_name = 'daten/Datengrundlage_Auswertung_V2_Skala.csv'
+in_file_name = 'daten/coordinates.csv'
+out_file_name = 'daten/coordinates.csv'
 
 rows = read_rows(in_file_name)
 
