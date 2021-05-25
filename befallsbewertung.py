@@ -1,6 +1,7 @@
 from csv_io import read_rows, write_rows
 
 befallstaerke_values = {
+    'nein': 0,
     'gering': 1,
     'mittel': 2,
     'schwer': 3,
@@ -8,7 +9,7 @@ befallstaerke_values = {
     'mittel-stark': 2.5
 }
 
-none_values = {'ka', ''}
+none_values = {'ka'}
 allowed_befallstaerke = set(befallstaerke_values.keys()).union(none_values)
 
 
@@ -23,8 +24,8 @@ def bewerte_befall(befallstaerke):
     return befallstaerke_values[befallstaerke]
 
 
-in_file_name = 'daten/coordinates.csv'
-out_file_name = 'daten/coordinates.csv'
+in_file_name = 'daten/data.csv'
+out_file_name = 'daten/data.csv'
 
 rows = read_rows(in_file_name)
 

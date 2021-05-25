@@ -15,8 +15,8 @@ def get_coordinates(plz):
     return coordinate_cache[plz][0], coordinate_cache[plz][1]
 
 
-in_file_name = 'daten/Daten_Bereinigt_02_inkl. Bindreiter_v2.csv'
-out_file_name = 'daten/coordinates.csv'
+in_file_name = 'daten/data.csv'
+out_file_name = 'daten/data.csv'
 
 rows = read_rows(in_file_name)
 

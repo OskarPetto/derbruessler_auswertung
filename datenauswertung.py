@@ -7,13 +7,15 @@ import numpy as np
 from shapely.geometry import mapping
 
 
-def sum_aggregate(rows, key, val):
-    aggregate = defaultdict(int)
+def befallsbewertung_pro_jahr(rows):
+    agg = defaultdict(list)
     for row in rows:
-        key_val = row[key]
-        val_val = row[val]
-        aggregate[key_val] += float(val_val)
-    return aggregate
+        key_val = row['Jahr']
+        val_val = float(row['Befallsbewertung'].replace(',', '.'))
+        if val_val != 0:
+            agg[key_val].append(val_val)
+
+    return {k: sum(v) / len(v) for k, v in agg.items()}
 
 
 def binary_search_closest(data, value):
@@ -53,8 +55,13 @@ def open_klima_file(file_name):
     return data_set.sel(band=1)
 
 
-def temporal_slice(data_set, from_date, to_date):
-    return data_set.sel(time=slice(from_date, to_date))
+def temporal_slice(data_set, year, from_month, to_month):
+    data_years = data_set['time.year']
+    data_months = data_set['time.month']
+    year_mask = data_years == year
+    month_mask = (data_months >= from_month) & (data_months <= to_month)
+    mask = year_mask & month_mask
+    return data_set.sel(time=mask)
 
 
 def spacial_slice_point(data_set, x, y, umkreis):
