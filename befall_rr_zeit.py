@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from datenauswertung import *
 
 start_year = 1980
-end_year = 2021
+end_year = 2020
 
 shape_file_name = 'daten/Gebiete_AGRANA.shp'
 rr_file_name = 'daten/rr_spartakus_daily_1970-2020_ua_la_vi_bu.nc'
@@ -26,16 +26,15 @@ rr_gebiete = spacial_slice_polygon(rr_data_array, geodf)
 
 out_rows = []
 
-for year in range(start_year, end_year):
+for year in range(start_year, end_year + 1):
+    rr_jahr_data_array = temporal_slice(rr_gebiete, year, 1, 12)
+    rr_jahr = rr_jahr_data_array.where(rr_jahr_data_array != -999).sum('time').mean('x').mean('y')
+    rr_jahr_value = rr_jahr.item(0)
     year_str = str(year)
-    for month in range(1, 13):
-        rr_monat_data_array = temporal_slice(rr_gebiete, year, month, month)
-        rr_monat = rr_monat_data_array.where(rr_monat_data_array != -999).sum('time').mean('x').mean('y')
-        rr_monat_value = rr_monat.item(0)
-        befall = 0
-        if month == 4 and year_str in befall_pro_jahr:
-            befall = befall_pro_jahr[str(year)]
-        out_rows.append({'Jahr': year, 'Monat': month, 'Befall': befall, 'RR': rr_monat_value})
+    befall = 0
+    if year_str in befall_pro_jahr:
+        befall = befall_pro_jahr[str(year)]
+    out_rows.append({'Jahr': year, 'Befall': befall, 'RR': rr_jahr_value})
 
 write_rows(out_file_name, out_rows)
 
