@@ -50,37 +50,37 @@ def default_crs():
     return CRS.from_epsg(4326)  # https://en.wikipedia.org/wiki/World_Geodetic_System
 
 
-def open_klima_file(file_name):
+def open_klima_file(file_name, key):
     data_set = rioxarray.open_rasterio(file_name)
-    return data_set.sel(band=1)
+    return data_set.sel(band=1).data_vars[key]
 
 
-def temporal_slice(data_set, year, from_month, to_month):
-    data_years = data_set['time.year']
-    data_months = data_set['time.month']
+def temporal_slice(data_array, year, from_month, to_month):
+    data_years = data_array['time.year']
+    data_months = data_array['time.month']
     year_mask = data_years == year
     month_mask = (data_months >= from_month) & (data_months <= to_month)
     mask = year_mask & month_mask
-    return data_set.sel(time=mask)
+    return data_array.sel(time=mask)
 
 
-def spacial_slice_point(data_set, x, y, umkreis):
+def spacial_slice_point(data_array, x, y, umkreis):
 
-    index_x = binary_search_closest(data_set.x.values, x)
-    index_y = binary_search_closest(data_set.y.values, y)
+    index_x = binary_search_closest(data_array.x.values, x)
+    index_y = binary_search_closest(data_array.y.values, y)
 
     index_from_x = index_x - umkreis
     index_to_x = index_x + umkreis + 1
     index_from_y = index_y - umkreis
     index_to_y = index_y + umkreis + 1
 
-    return data_set.isel(x=slice(index_from_x, index_to_x), y=slice(index_from_y, index_to_y))
+    return data_array.isel(x=slice(index_from_x, index_to_x), y=slice(index_from_y, index_to_y))
 
 
 # https://gis.stackexchange.com/questions/354782/how-to-mask-netcdf-time-series-data-from-a-shapefile-in-python
 # https://gis.stackexchange.com/questions/264332/clip-a-netcdf-file-using-a-shapefile-with-python
 # https://gis.stackexchange.com/questions/289775/masking-netcdf-data-using-shapefile-xarray-geopandas
-def spacial_slice_polygon(data_set, geodf):
+def spacial_slice_polygon(data_array, geodf):
     polygons = geodf.geometry.apply(mapping)
-    clipped = data_set.rio.clip(polygons, geodf.crs, drop=False)
+    clipped = data_array.rio.clip(polygons, geodf.crs, drop=False)
     return clipped
