@@ -65,6 +65,8 @@ def temporal_slice(data_array, year, from_month, to_month):
 
 
 def spacial_slice_point(data_array, x, y, umkreis):
+    if umkreis == 0:
+        return data_array.sel(x=x, y=y, method="nearest")
 
     index_x = binary_search_closest(data_array.x.values, x)
     index_y = binary_search_closest(data_array.y.values, y)
