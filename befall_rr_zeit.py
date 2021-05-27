@@ -26,7 +26,7 @@ rr_gebiete = spacial_slice_polygon(rr_data_array, geodf)
 
 out_rows = []
 
-for year in range(start_year, end_year + 1):
+for year in tqdm(range(start_year, end_year + 1)):
     rr_jahr_data_array = temporal_slice(rr_gebiete, year, 3, 9)
     rr_jahr = rr_jahr_data_array.where(rr_jahr_data_array != -999).sum('time').mean('x').mean('y')
     rr_jahr_value = rr_jahr.item(0)
@@ -37,19 +37,3 @@ for year in range(start_year, end_year + 1):
     out_rows.append({'Jahr': year, 'Befall': befall, 'RR': rr_jahr_value})
 
 write_rows(out_file_name, out_rows)
-
-
-# from_crs = CRS.from_epsg(4326)  # https://en.wikipedia.org/wiki/World_Geodetic_System
-# rr_data_set = open_klima_file(rr_file_name)
-# to_crs = rr_data_set.rio.crs
-# transformer = Transformer.from_crs(from_crs, to_crs)
-
-#
-# latitude = 48.228082690619544
-# longitude = 16.689064484415454
-# (x, y) = transformer.transform(latitude, longitude)
-#
-#
-# rr_data_set = spacial_slice_point(rr_data_set, x, y, 1)
-#
-# print(rr_data_set)

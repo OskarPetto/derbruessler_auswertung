@@ -25,6 +25,10 @@ def localize_floats(row):
     return {k: str(v).replace('.', ',') if isinstance(v, float) else str(v) for k, v in row.items()}
 
 
+def unlocalize_float(str):
+    return float(str.replace(',', '.'))
+
+
 def write_rows(csv_file, rows):
     with open(csv_file, 'w', newline='', encoding='utf-8') as csvfile:
         fieldnames = rows[0].keys()
