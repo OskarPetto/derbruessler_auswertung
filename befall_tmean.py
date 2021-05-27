@@ -23,7 +23,7 @@ tmean_data_array = open_klima_file(tmean_file_name, 'Tmean')
 tmean_cache = {}
 
 from_crs = CRS.from_epsg(4326)  # https://en.wikipedia.org/wiki/World_Geodetic_System
-to_crs = rr_data_array.rio.crs
+to_crs = tmean_data_array.rio.crs
 transformer = Transformer.from_crs(from_crs, to_crs)
 
 out_rows = []
@@ -42,12 +42,12 @@ for row in tqdm(ruessler_rows_filtered):
     latitude = row['Latitude']
     longitude = row['Longitude']
     befallsbewertung = row['Befallsbewertung']
-    if (latitude, longitude) in rr_cache:
+    if (latitude, longitude) in tmean_cache:
         tmean_point = tmean_cache[(latitude, longitude)]
     else:
         (x, y) = transformer.transform(latitude, longitude)
-        tmean_point = spacial_slice_point(rr_data_array, x, y, 0)
-        rr_cache[(latitude, longitude)] = tmean_point
+        tmean_point = spacial_slice_point(tmean_data_array, x, y, 0)
+        tmean_cache[(latitude, longitude)] = tmean_point
     row_dict = {'Befallsbewertung': befallsbewertung}
     for period in periods:
         period_name = str(period)
