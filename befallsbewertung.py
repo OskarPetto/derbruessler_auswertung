@@ -31,7 +31,7 @@ def bewerte_befall(befallstaerke, umbruch):
     if umbruch not in allowed_umbruch:
         raise Exception('Kenne Umbruch \"' + umbruch + '\" nicht')
 
-    return befallstaerke_values[befallstaerke] + umbruch_values[umbruch]
+    return befallstaerke_values[befallstaerke]  # + umbruch_values[umbruch]
 
 
 in_file_name = 'daten/data.csv'

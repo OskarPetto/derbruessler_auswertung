@@ -15,7 +15,7 @@ def befallsbewertung_pro_jahr(rows):
         if val_val != 0:
             agg[key_val].append(val_val)
 
-    return {k: sum(v) / len(v) for k, v in agg.items()}
+    return {k: sum(v) for k, v in agg.items()}
 
 
 def binary_search_closest(data, value):
