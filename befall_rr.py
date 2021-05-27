@@ -32,8 +32,8 @@ for row in ruessler_rows:
     jahr = int(row['Jahr'])
     latitude = unlocalize_float(row['Latitude'])
     longitude = unlocalize_float(row['Longitude'])
-    befall = row['Befall'].lower()
-    if not math.isnan(latitude) and not math.isnan(longitude) and befall != 'nein':
+    befall = row['Befall'].lower().strip()
+    if not math.isnan(latitude) and not math.isnan(longitude) and befall == 'ja':
         befallsbewertung = row['Befallsbewertung']
         ruessler_rows_filtered.append({'Jahr': jahr, 'Latitude': latitude, 'Longitude': longitude, 'Befallsbewertung': befallsbewertung})
 
