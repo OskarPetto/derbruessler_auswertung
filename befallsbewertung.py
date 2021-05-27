@@ -2,6 +2,7 @@ from csv_io import read_rows, write_rows
 
 befallstaerke_values = {
     'nein': 0,
+    'ka': 1,
     'gering': 1,
     'mittel': 2,
     'schwer': 3,
@@ -9,19 +10,28 @@ befallstaerke_values = {
     'mittel-stark': 2.5
 }
 
-none_values = {'ka'}
-allowed_befallstaerke = set(befallstaerke_values.keys()).union(none_values)
+umbruch_values = {
+    'nein': 0,
+    '': 0,
+    'ka': 0,
+    'teilumbruch': 0.5,
+    'ja': 0.5,
+    'gesamtumbruch': 1
+}
+
+allowed_befallstaerke = set(befallstaerke_values.keys())
+allowed_umbruch = set(umbruch_values.keys())
 
 
-def bewerte_befall(befallstaerke):
+def bewerte_befall(befallstaerke, umbruch):
 
     if befallstaerke not in allowed_befallstaerke:
         raise Exception('Kenne Befallstärke \"' + befallstaerke + '\" nicht')
 
-    if befallstaerke in none_values:
-        return 1
+    if umbruch not in allowed_umbruch:
+        raise Exception('Kenne Umbruch \"' + umbruch + '\" nicht')
 
-    return befallstaerke_values[befallstaerke]
+    return befallstaerke_values[befallstaerke] + umbruch_values[umbruch]
 
 
 in_file_name = 'daten/data.csv'
@@ -31,7 +41,8 @@ rows = read_rows(in_file_name)
 
 for row in rows:
     befallstaerke = row['Schwere des Befalls (Einschätzung)'].lower()
-    row['Befallsbewertung'] = bewerte_befall(befallstaerke)
+    umbruch = row['Flächenumbruch'].lower()
+    row['Befallsbewertung'] = bewerte_befall(befallstaerke, umbruch)
 
 write_rows(out_file_name, rows)
 
