@@ -15,7 +15,7 @@ shape_file_name = 'daten/Gebiete_AGRANA.shp'
 rr_file_name = 'daten/rr_spartakus_daily_1970-2020_ua_la_vi_bu.nc'
 ruessler_file_name = 'daten/data.csv'
 
-out_file_name = 'daten/befall_rr39_zeit.csv'
+out_file_name = 'daten/befall_rr_zeit.csv'
 
 ruessler_rows = read_rows(ruessler_file_name)
 befall_pro_jahr = befallsbewertung_pro_jahr(ruessler_rows)
@@ -27,7 +27,7 @@ rr_gebiete = spacial_slice_polygon(rr_data_array, geodf)
 out_rows = []
 
 for year in tqdm(range(start_year, end_year + 1)):
-    rr_jahr_data_array = temporal_slice(rr_gebiete, year, 3, 9)
+    rr_jahr_data_array = temporal_slice(rr_gebiete, year, 1, 12)
     rr_jahr = rr_jahr_data_array.where(rr_jahr_data_array != -999).sum('time').mean('x').mean('y')
     rr_jahr_value = rr_jahr.item(0)
     year_str = str(year)
