@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from datenauswertung import *
 import math
 
-periods = [(-1, 5, 9), (-1, 5, 7), (0, 4, 5)]
+periods = [(-1, 4, 5), (-1, 6, 7), (-1, 8, 9), (0, 4, 5)]
 
 tmean_file_name = 'daten/tmean_spartakus_daily_1970-2020_ua_la_vi_bu.nc'
 ruessler_file_name = 'daten/data.csv'
