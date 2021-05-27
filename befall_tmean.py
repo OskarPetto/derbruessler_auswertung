@@ -19,7 +19,7 @@ out_file_name = 'daten/befall_rr.csv'
 ruessler_rows = read_rows(ruessler_file_name)
 ruessler_rows_filtered = []
 
-tmean_data_array = open_klima_file(rr_file_name, 'RR')
+tmean_data_array = open_klima_file(tmean_file_name, 'Tmean')
 tmean_cache = {}
 
 from_crs = CRS.from_epsg(4326)  # https://en.wikipedia.org/wiki/World_Geodetic_System
