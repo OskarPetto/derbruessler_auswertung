@@ -14,7 +14,7 @@ periods = [(-1, 4, 5), (-1, 6, 7), (-1, 8, 9), (0, 4, 5)]
 tmean_file_name = 'daten/tmean_spartakus_daily_1970-2020_ua_la_vi_bu.nc'
 ruessler_file_name = 'daten/data.csv'
 
-out_file_name = 'daten/befall_rr.csv'
+out_file_name = 'daten/befall_tmean.csv'
 
 ruessler_rows = read_rows(ruessler_file_name)
 ruessler_rows_filtered = []
