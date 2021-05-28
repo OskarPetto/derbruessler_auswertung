@@ -15,7 +15,7 @@ def befallsbewertung_pro_jahr(rows):
         if val_val != 0:
             agg[key_val].append(val_val)
 
-    return {k: sum(v) for k, v in agg.items()}
+    return {k: sum(v) / len(v) for k, v in agg.items()}
 
 
 def binary_search_closest(data, value):
@@ -55,10 +55,10 @@ def open_klima_file(file_name, key):
     return data_set.sel(band=1).data_vars[key]
 
 
-def temporal_slice(data_array, year, from_month, to_month):
+def temporal_slice(data_array, from_year, from_month, to_year, to_month):
     data_years = data_array['time.year']
     data_months = data_array['time.month']
-    year_mask = data_years == year
+    year_mask = (data_years >= from_year) & (data_years <= to_year)
     month_mask = (data_months >= from_month) & (data_months <= to_month)
     mask = year_mask & month_mask
     return data_array.sel(time=mask)
