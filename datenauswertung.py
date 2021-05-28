@@ -58,9 +58,9 @@ def open_klima_file(file_name, key):
 def temporal_slice(data_array, from_year, from_month, to_year, to_month):
     data_years = data_array['time.year']
     data_months = data_array['time.month']
-    year_mask = (data_years >= from_year) & (data_years <= to_year)
-    month_mask = (data_months >= from_month) & (data_months <= to_month)
-    mask = year_mask & month_mask
+    from_mask = (data_years >= from_year) & (data_months >= from_month)
+    to_mask = (data_years <= to_year) & (data_months <= to_month)
+    mask = from_mask & to_mask
     return data_array.sel(time=mask)
 
 
