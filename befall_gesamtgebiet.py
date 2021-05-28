@@ -48,11 +48,15 @@ for year in tqdm(range(start_year, end_year + 1)):
     row_dict = {'Jahr': year, 'Befall': befall}
     for period_name, period in periods.items():
         rr_period = temporal_slice(rr_gebiete, year + period[0], period[1], year + period[2], period[3])
-        rr_aggregate = rr_period.where(rr_period != -999).mean().item(0)
+        rr_period = rr_period.where(rr_period != -999)
         tmean_period = temporal_slice(tmean_gebiete, year + period[0], period[1], year + period[2], period[3])
-        tmean_aggregate = tmean_period.where(tmean_period != -999).mean().item(0)
+        tmean_period = tmean_period.where(tmean_period != -999)
+        rr_aggregate = rr_period.mean().item(0)
+        tmean_aggregate = tmean_period.mean().item(0)
+        quotient_aggregate = rr_aggregate / tmean_aggregate
         row_dict['RR ' + period_name] = rr_aggregate
         row_dict['Tmean ' + period_name] = tmean_aggregate
+        row_dict['RR/Tmean ' + period_name] = quotient_aggregate
     out_rows.append(row_dict)
 
 write_rows(out_file_name, out_rows)
