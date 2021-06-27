@@ -50,17 +50,17 @@ def default_crs():
     return CRS.from_epsg(4326)  # https://en.wikipedia.org/wiki/World_Geodetic_System
 
 
-def open_klima_file(file_name, key):
+def open_klima_file(file_name):
     data_set = rioxarray.open_rasterio(file_name)
-    return data_set.sel(band=1).data_vars[key]
+    return data_set.sel(band=1)
 
 
-def temporal_slice(data_array, from_year, from_month, to_year, to_month):
-    dates = data_array['time.year'] * 100 + data_array['time.month']
+def temporal_slice(data_set, from_year, from_month, to_year, to_month):
+    dates = data_set['time.year'] * 100 + data_set['time.month']
     from_date = from_year * 100 + from_month
     to_date = to_year * 100 + to_month
     mask = (dates >= from_date) & (dates <= to_date)
-    return data_array.sel(time=mask)
+    return data_set.sel(time=mask)
 
 
 def spacial_slice_point(data_array, x, y, umkreis):
