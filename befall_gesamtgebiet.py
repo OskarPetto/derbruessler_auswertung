@@ -22,7 +22,7 @@ periods = {
     'Puppe': (-1, 7, -1, 9),
 }
 
-min_temp = 16
+min_temp = 18
 max_rr = 1
 
 shape_file_name = 'daten/Gebiete_AGRANA.shp'
@@ -56,11 +56,11 @@ for year in tqdm(range(start_year, end_year + 1)):
         rr_data_array = klima_data_set_period.data_vars['RR'].where(lambda rr: rr != -999).mean('x').mean('y')
         tmean_mean = tmean_data_array.mean().item(0)
         rr_mean = rr_data_array.mean().item(0)
-        hot_and_dry_day_count = ((tmean_data_array > min_temp) & (rr_data_array < max_rr)).sum().item(0)
+        hot_and_dry_day_count = ((tmean_data_array >= min_temp) & (rr_data_array < max_rr)).sum().item(0)
         # print(hot_and_dry_day_count, '/', len(tmean_data_array))
         row_dict['Tmean ' + period_name] = tmean_mean
         row_dict['RR ' + period_name] = rr_mean
-        row_dict['#(Tmean > 16 and RR < 1) ' + period_name] = hot_and_dry_day_count
+        row_dict['#(Tmean >= ' + str(min_temp) + ' and RR < ' + str(max_rr) + ') ' + period_name] = hot_and_dry_day_count
 
 
     out_rows.append(row_dict)
