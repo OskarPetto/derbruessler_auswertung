@@ -12,14 +12,14 @@ start_year = 1980
 end_year = 2020
 
 periods = {
-    'Jahr 0 Gesamt': (0, 1, 0, 12),
-    'Jahr -1 Gesamt': (-1, 1, -1, 12),
+    'Jahr Gesamt': (0, 1, 0, 12),
+    'Vorjahr Gesamt': (-1, 1, -1, 12),
     'Entwickelter Käfer': (-1, 8, 0, 3),
     'Aktiver Käfer': (0, 3, 0, 5),
+    'Aktiver Käfer Vorjahr': (-1, 3, 0, 5),
     'Ei': (-1, 5, -1, 6),
     'Larve': (-1, 5, -1, 8),
     'Puppe': (-1, 7, -1, 9),
-    'Aktiver Käfer Vorjahr': (-1, 3, 0, 5)
 }
 
 min_temp = 16
@@ -37,9 +37,10 @@ befall_pro_jahr = befallsbewertung_pro_jahr(ruessler_rows)
 
 rr_data_set = open_klima_file(rr_file_name)
 t_data_set = open_klima_file(tmean_file_name)
-klima_data_set_all_positions = rr_data_set.merge(t_data_set)
+klima_data_set_all_positions = rr_data_set.merge(t_data_set, compat="identical", combine_attrs="identical")
+klima_data_set_all_positions.rio.write_crs(rr_data_set.rio.crs, inplace=True)
 geodf = geopandas.read_file(shape_file_name)
-klima_data_set = klima_data_set_all_positions #spacial_slice_polygon(rr_file, geodf)
+klima_data_set = spacial_slice_polygon(klima_data_set_all_positions, geodf)
 
 out_rows = []
 
@@ -55,13 +56,13 @@ for year in tqdm(range(start_year, end_year + 1)):
         rr_data_array = klima_data_set_period.data_vars['RR'].where(lambda rr: rr != -999).mean('x').mean('y')
         tmean_mean = tmean_data_array.mean().item(0)
         rr_mean = rr_data_array.mean().item(0)
-        summer_count = ((tmean_data_array > min_temp) & (rr_data_array < max_rr)).sum().item(0)
-        # print(summer_count, '/', len(tmean_data_array))
-        row_dict['mean Tmean ' + period_name] = tmean_mean
-        row_dict['mean RR ' + period_name] = rr_mean
-        row_dict['count DryHotDays ' + period_name] = summer_count
+        hot_and_dry_day_count = ((tmean_data_array > min_temp) & (rr_data_array < max_rr)).sum().item(0)
+        # print(hot_and_dry_day_count, '/', len(tmean_data_array))
+        row_dict['Tmean ' + period_name] = tmean_mean
+        row_dict['RR ' + period_name] = rr_mean
+        row_dict['#(Tmean > 16 and RR < 1) ' + period_name] = hot_and_dry_day_count
 
 
     out_rows.append(row_dict)
 
-# write_rows(out_file_name, out_rows)
+write_rows(out_file_name, out_rows)
