@@ -63,11 +63,11 @@ for year in tqdm(range(start_year, end_year + 1)):
         tmean_mean = tmean_data_array.mean().item(0)
         tx_mean = tx_data_array.mean().item(0)
         rr_sum = rr_data_array.sum().item(0)
-        hot_and_dry_day_count = (tx_data_array >= min_temp) #((tx_data_array >= min_temp) & (rr_data_array <= max_rr)).sum().item(0)
+        summer_day_count = (tx_data_array >= min_temp).sum().item(0) #((tx_data_array >= min_temp) & (rr_data_array <= max_rr)).sum().item(0)
         # print(hot_and_dry_day_count, '/', len(tx_data_array))
         row_dict['mean Tmean ' + period_name] = tmean_mean
         row_dict['sum RR ' + period_name] = rr_sum
-        row_dict['#(Tx >= ' + str(min_temp) + ') ' + period_name] = hot_and_dry_day_count
+        row_dict['#(Tx >= ' + str(min_temp) + ') ' + period_name] = summer_day_count
 
 
     out_rows.append(row_dict)
