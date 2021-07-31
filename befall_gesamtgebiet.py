@@ -23,7 +23,7 @@ periods = {
 }
 
 min_temp = 25
-max_rr = 1
+min_rr = 0.1
 
 shape_file_name = 'daten/Gebiete_AGRANA.shp'
 rr_file_name = 'daten/rr_spartakus_daily_1970-2020_ua_la_vi_bu.nc'
@@ -58,16 +58,17 @@ for year in tqdm(range(start_year, end_year + 1)):
     for period_name, period in periods.items():
         klima_data_set_period = temporal_slice(klima_data_set, year + period[0], period[1], year + period[2], period[3])
         tmean_data_array = klima_data_set_period.data_vars['Tmean'].where(lambda tmean: tmean != -999).mean('x').mean('y')
-        tx_data_array = klima_data_set_period.data_vars['Tx'].where(lambda tx: tx != -999).mean('x').mean('y')
+        tmax_data_array = klima_data_set_period.data_vars['Tx'].where(lambda tx: tx != -999).mean('x').mean('y')
         rr_data_array = klima_data_set_period.data_vars['RR'].where(lambda rr: rr != -999).mean('x').mean('y')
         tmean_mean = tmean_data_array.mean().item(0)
-        tx_mean = tx_data_array.mean().item(0)
         rr_sum = rr_data_array.sum().item(0)
-        summer_day_count = (tx_data_array >= min_temp).sum().item(0) #((tx_data_array >= min_temp) & (rr_data_array <= max_rr)).sum().item(0)
-        # print(hot_and_dry_day_count, '/', len(tx_data_array))
+        summer_day_count = (tmax_data_array >= min_temp).sum().item(0)
+        rain_day_count = (rr_data_array >= min_rr).sum().item(0)
+        # print(rain_day_count, '/', len(tx_data_array))
         row_dict['mean Tmean ' + period_name] = tmean_mean
         row_dict['sum RR ' + period_name] = rr_sum
         row_dict['#(Tx >= ' + str(min_temp) + ') ' + period_name] = summer_day_count
+        row_dict['#(RR >= ' + str(min_rr) + ') ' + period_name] = rain_day_count
 
 
     out_rows.append(row_dict)
