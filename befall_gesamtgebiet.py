@@ -23,7 +23,7 @@ periods = {
 }
 
 min_temp = 25
-min_rr = 0.1
+min_rr = 3
 
 shape_file_name = 'daten/Gebiete_AGRANA.shp'
 rr_file_name = 'daten/rr_spartakus_daily_1970-2020_ua_la_vi_bu.nc'
